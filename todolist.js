@@ -24,7 +24,6 @@ const createTaskItem = (text) => {
   const statusButton = document.createElement("input");
   statusButton.type = "button";
   statusButton.value = "作業中";
-  taskItem.appendChild(statusButton);
 
   const deleteButton = document.createElement("input");
   deleteButton.type = "button";
@@ -34,8 +33,10 @@ const createTaskItem = (text) => {
     deleteTask(task.id);
   });
 
-  taskItem.textContent = `${task.id} ${task.text}`;
-  taskItem.appendChild(statusButton);
+  // updateTask関数を呼び出しタスクの状態を作業中または完了で更新する
+  const statusButtonUpdate = updateTask(task);
+  taskItem.appendChild(statusButtonUpdate);
+
   taskItem.appendChild(deleteButton);
 
   return taskItem;
@@ -69,6 +70,22 @@ const deleteTask = (taskId) => {
       taskItem.remove();
     }
   }
+};
+
+// タスクの更新処理
+const updateTask = (taskId) => {
+  const statusButton = document.createElement("button");
+  statusButton.innerText = taskId.status;
+  statusButton.addEventListener("click", () => {
+    if (taskId.status === "作業中") {
+      taskId.status = "完了";
+    } else {
+      taskId.status = "作業中";
+    }
+    // ステータスボタンの表示を更新
+    statusButton.innerText = taskId.status;
+  });
+  return statusButton;
 };
 
 // 追加ボタンのクリックイベントをハンドリング
