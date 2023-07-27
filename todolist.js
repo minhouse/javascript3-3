@@ -2,29 +2,36 @@
 let taskId = 0;
 const tasks = [];
 
-// createTaskItem関数はタスク項目の要素を作成
 // 連番をインクリメントしながらタスクのテキストとボタンを含むHTMLを生成し作成した要素を返す
 const createTaskItem = (text) => {
   taskId++;
+  // オブジェクト＝辞書の定義
   const task = {
     id: taskId,
     text: text,
+    // タスク作成時のデフォルト表示
     status: "作業中",
   };
   tasks.push(task);
 
+  // タスクの表示用要素を作成
   const taskItem = document.createElement("div");
   taskItem.classList.add("task-item");
   taskItem.id = `task_${task.id}`;
 
+  // タスクのテキスト表示用要素を作成
   const taskText = document.createElement("span");
-  taskText.textContent = `${taskId} ${task.text}`; // 連番と入力したテキストを表示
+
+  // 連番と入力したテキストを表示
+  taskText.textContent = `${taskId} ${task.text}`;
   taskItem.appendChild(taskText);
 
+  // タスク状態を示すボタン要素を作成
   const statusButton = document.createElement("input");
   statusButton.type = "button";
   statusButton.value = "作業中";
 
+  // タスク削除用のボタン要素を作成
   const deleteButton = document.createElement("input");
   deleteButton.type = "button";
   deleteButton.value = "削除";
@@ -34,21 +41,23 @@ const createTaskItem = (text) => {
   });
 
   // updateTask関数を呼び出しタスクの状態を作業中または完了で更新する
-  const statusButtonUpdate = updateTask(task);
-  taskItem.appendChild(statusButtonUpdate);
+  updateTask(task, statusButton);
+  taskItem.appendChild(statusButton);
 
+  // タスクの削除ボタンを追加
   taskItem.appendChild(deleteButton);
 
+  // タスク要素を返す
   return taskItem;
 };
 
-// タスク項目を追加する処理
+// 指定されたタスク要素を結果表示領域に追加
 const appendResult = (item) => {
   const resultHolder = document.getElementById("result");
   resultHolder.appendChild(item);
 };
 
-// タスクの追加処理
+// 入力されたテキストを取得し新しいタスクを作成して表示領域に追加
 const addTask = () => {
   const inputTask = document.getElementById("input_task");
   const taskText = inputTask.value;
@@ -58,7 +67,7 @@ const addTask = () => {
   appendResult(taskItem);
 };
 
-// タスクの削除処理
+// 指定されたタスクIDに対応するタスクを配列から削除しHTML要素からも削除
 const deleteTask = (taskId) => {
   const index = tasks.findIndex((t) => {
     return t.id === taskId;
@@ -72,10 +81,8 @@ const deleteTask = (taskId) => {
   }
 };
 
-// タスクの更新処理
-const updateTask = (taskId) => {
-  const statusButton = document.createElement("button");
-  statusButton.innerText = taskId.status;
+// 指定されたタスクの状態を切り替える
+const updateTask = (taskId, statusButton) => {
   statusButton.addEventListener("click", () => {
     if (taskId.status === "作業中") {
       taskId.status = "完了";
@@ -83,11 +90,10 @@ const updateTask = (taskId) => {
       taskId.status = "作業中";
     }
     // ステータスボタンの表示を更新
-    statusButton.innerText = taskId.status;
+    statusButton.value = taskId.status;
   });
-  return statusButton;
 };
 
-// 追加ボタンのクリックイベントをハンドリング
+// 追加ボタンのクリックイベントをハンドリングし新しいタスクを追加する処理を呼び出し
 const addButton = document.getElementById("add_button");
 addButton.addEventListener("click", addTask);
